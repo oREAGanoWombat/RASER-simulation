@@ -76,13 +76,12 @@ def simulate_laser_dynamics(
         sin_phi = np.sin(phi)
         sum_term_S6_and_S7_cos = X * cos_phi + Y * sin_phi
         sum_term_S6_and_S7_sin = Y * cos_phi - X * sin_phi
-        '''
-        I DONT THINK THESE ARE CORRECT
+
         d_d_dt = -d / T1 - 4 * coupling_beta * d * (sum_term_S6_and_S7_cos ** 2)
         d_A_dt = -A / T2 + coupling_beta * d * sum_term_S6_and_S7_cos
         d_phi_dt = omega_natural_rad + coupling_beta * (d / (A + epsilon)) * sum_term_S6_and_S7_sin
         dydt = np.concatenate([d_d_dt, d_A_dt, d_phi_dt])
-        '''
+
         return dydt
 
     t_span = [0, sim_duration]
