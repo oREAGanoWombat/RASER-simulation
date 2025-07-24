@@ -192,7 +192,7 @@ if __name__ == '__main__':
     T1_paper, T2_paper, Q_paper = 5.0, 0.7, 100
     Vs_paper, N_slices = 0.5 * (1e-2)**3, 50
     delta_nu_paper, Delta_paper, nu0_paper = 0.2, 10.0, 50.0
-    d0_total = 25e16
+    d0_total = -25e16
     coupling_beta_calculated = (MU0 * H_BAR * GAMMA_H**2 * Q_paper) / (4 * Vs_paper)
     print(f"Calculated Coupling Constant (beta): {coupling_beta_calculated:.4e}")
 
