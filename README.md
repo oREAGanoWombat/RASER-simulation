@@ -9,3 +9,9 @@
 
 `RASER-simulation.ipynb` - jupyter notebook that takes Alon's code and provides further explanation on functions and variables
 
+## Requirements
+*If using Conda*, run the following in your command line: \
+```conda install requirements.txt```
+
+*Otherwise*, run the following in your command line: \
+```pip install requirements.txt```
