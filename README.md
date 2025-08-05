@@ -9,7 +9,14 @@
 
 `RASER-simulation.ipynb` - jupyter notebook that takes Alon's code and provides further explanation on functions and variables
 
+`simulate-RASER.py` - Python file with edited script from `RASER-simulation.ipynb`
+
+`simulation_log.txt` - first simulation log generated (was saved in the wrong folder), kept for reference
+
+`requirements.txt` - required packages to run any of the above files, see below for instructions on installing
+
 ## Requirements
+If you'd like to batch install the packages in the `requirements.txt` file, do the following: \
 *If using Conda*, run the following in your command line: \
 ```conda install requirements.txt```
 
