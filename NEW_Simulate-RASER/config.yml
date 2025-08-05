@@ -1,0 +1,4 @@
+# keep quotation marks for variables that already have them
+# for non-numeric variables, options are defined below the variable
+directories:
+  output_directory_root
