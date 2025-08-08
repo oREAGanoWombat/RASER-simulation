@@ -15,3 +15,10 @@ If you'd like to batch install the packages in the `requirements.txt` file, do t
 
 *Otherwise*, run the following in your command line: \
 ```pip install requirements.txt```
+
+## Configuration
+Below is a list of parameters and settings that can be changed in `config.yml.` \
+**Directories** \
+output_directory_root
+- `auto`: setting this parameter to "auto" saves simulation outputs in a subdirectory named "Sim_RASER_Output" inside of the root directory where the script is located
+- setting this parameter to a specific path encased in quotation marks saves simulation outputs in the directory defined by the path
