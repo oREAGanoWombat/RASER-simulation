@@ -11,6 +11,7 @@ def simulate_raser_dynamics(
         mode_spacing_hz=0.2,
         sim_duration=10.0,
         points_per_sec=2000,
+        solver_method='BDF',
 ):
     N = len(initial_population_inversion)
 
@@ -61,7 +62,7 @@ def simulate_raser_dynamics(
     Solve ODEs (ordinary differential equations)
     dense_output = True creates a continuous solution object that can be evaluated at arbitrary time points
     """
-    sol = solve_ivp(raser_ode_system, t_span, y0, method='BDF', dense_output=True)
+    sol = solve_ivp(raser_ode_system, t_span, y0, method=solver_method, dense_output=True)
 
     """
     Process Output Signal
