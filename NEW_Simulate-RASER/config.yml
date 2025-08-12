@@ -1,4 +1,3 @@
-# keep quotation marks for variables that already have them
-# for non-numeric variables, options are defined below the variable
+# variables and options are defined in README
 directories:
   output_directory_root
