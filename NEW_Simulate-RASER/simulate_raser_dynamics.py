@@ -1,5 +1,6 @@
 # Requirements
 import numpy as np
+from scipy.integrate import solve_ivp
 
 def simulate_raser_dynamics(
         initial_population_inversion,
