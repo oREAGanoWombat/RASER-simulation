@@ -1,3 +1,8 @@
+"""
+utility_functions.py
+Contains general utility functions for directory management and creating sample inversion maps (phantoms) for RASER simulation
+"""
+
 # Requirements
 import os
 import numpy as np
