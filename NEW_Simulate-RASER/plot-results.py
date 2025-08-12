@@ -1,6 +1,7 @@
 # Requirements
 import numpy as np
 import matplotlib.pyplot as plt
+from skimage.io import imsave
 
 # plot_results() visualizes the simulation results from teh multimode RASER model
 def plot_results(results, png_path):
