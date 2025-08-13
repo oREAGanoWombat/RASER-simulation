@@ -1,3 +1,4 @@
 # variables and options are defined in README
-directories:
-  output_directory_root
+utility:
+  output_directory_root: 'auto'
+  inversion_map_mode: 'square'
