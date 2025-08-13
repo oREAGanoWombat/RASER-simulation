@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from skimage.io import imsave
 
-# plot_results() visualizes the simulation results from teh multimode RASER model
+# plot_results() visualizes the simulation results from the multimode RASER model
 def plot_results(results, png_path):
     time = results['time']
     N = results['n_modes']
@@ -62,4 +62,28 @@ def plot_results(results, png_path):
     plt.savefig(png_path)
     plt.show()
     print(f"Saved results as PNG to {png_path}")
+    plt.close(fig)
+
+# plot_reconstruction_comparison() provides a direct visual comparison between the initial 2D image reconstructed from the RASER signals
+def plot_reconstruction_comparison(original_image, reconstructed_image, path):
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5)) # create figure and 1x2 grid of axes objects
+    fig.suptitle("Image Reconstruction Comparison", fontsize=16)
+
+    # Subplot 1. Original Image (left)
+    orig = axes[0]
+    orig.imshow(original_image, cmap='gray', vmin=0, vmax=1)
+    orig.set_title("Original Image")
+    orig.set_axis_off()
+
+    # Subplot 2. Reconstructed Image (right)
+    recon = axes[1]
+    recon.imshow(reconstructed_image, cmap='gray')
+    recon.set_title("Reconstructed from RASER Signals")
+    recon.set_axis_off()
+
+    # Finalizing and Saving
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.savefig(path)
+    plt.show()
+    print(f"Saved reconstruction comparison to {path}")
     plt.close(fig)
