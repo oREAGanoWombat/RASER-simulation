@@ -37,7 +37,7 @@ Core simulation function; models the time evolution of multiple interacting RASE
 ODEs are as described in supplementary material at the DOI link at the top of this script
 """
 def simulate_raser_dynamics(
-        initial_population_inversion,
+        initial_population_inversion=[1e16,1e16],
         T1=5.0,
         T2=0.7,
         coupling_beta=1.0,
@@ -63,7 +63,7 @@ def simulate_raser_dynamics(
 
     print(f"Running multimode RASER simulation with {N} modes...")
     epsilon = 1e-12 # used to prevent division by zero
-    mu_indices = np.arange(1, N + 1)
+    mu_indices = np.arange(1, 2 + 1)
     natural_freq_hz = center_freq_hz - 0.5 * (gain_bandwidth_hz - mode_spacing_hz * (2 * mu_indices - 1))
     omega_natural_rad = 2 * np.pi * natural_freq_hz # first term in Eq. S7
 
@@ -269,32 +269,9 @@ if __name__ == '__main__':
         log.write(f'Frequency Range: {min_freq_hz}-{max_freq_hz}\n')
     log.close()
 
-    # Create original 2D image
-    init_map = create_sample_inversion_map(shape=(n_modes,n_modes)) # shape determined by n_modes
-    print('Original 2D Ground Truth Image Created\n')
-
-    # --- Setup angles and initialize sinogram ---
-    theta = np.linspace(0., 180., n_proj, endpoint=False)
-    placehold_proj = radon(init_map, theta=[0], circle=True)
-    detector_len = len(placehold_proj)
-    reconstructed_sinogram = np.zeros((detector_len, n_proj))
-    print(f'Starting reconstruction with {n_proj} projections...')
-    print(f'Each reconstructed projection will be interpolated to a detector length of {detector_len}.\n')
-    with open(f'{results_dir}/simulation_log.txt', 'a') as log:
-        log.write(f'theta: {theta}\n')
-    log.close()
-
-    # --- Main Tomography Loop ---
-    for i, angle in enumerate(theta): # iterate through each angle defined in theta
-        print(f'--- Processing Projection {i+1}/{n_proj} (Angle: {angle:.1f} deg) ---')
-
-        # Radon transform to get 1D projection for current angle
-        projection = radon(init_map, theta=[angle], circle=True).flatten()
-        print('...Obtained 1D projection for current angle')
-
-        # Prepare projection for simulation input
-        if np.max(projection) > 0:
-            projection = projection / np.sum(projection) # normalize
+    # Prepare projection for simulation input
+    if np.max(projection) > 0:
+        projection = projection / np.sum(projection) # normalize
         init_pop_inv = d0_total * projection # convert projection to population inversion
         print('...Projection prepared for simulation')
 
@@ -325,54 +302,6 @@ if __name__ == '__main__':
         filtered_mag = shift_mag[freq_mask] # only include magnitudes in frequency range
         print('1D Projection reconstructed from simulation')
 
-        # Resized filtered_mag to match detector_len
-        if len(filtered_mag) > 1:
-            x_source = np.linspace(0, 1, len(filtered_mag))
-            x_target = np.linspace(0, 1, detector_len)
-            recon_proj_1d = np.interp(x_target, x_source, filtered_mag)
-            print('...filtered_mag resized to match detector_len')
-        else:
-            recon_proj_1d = np.zeros(detector_len)
-            ('...filtered_mag matches detector_len')
-
-        # Store result in sinogram
-        reconstructed_sinogram[:, i] = recon_proj_1d
-        print('Reconstructed projection stored in sinogram\n')
-
-    print('--- ALL PROJECTIONS PROCESSED ---')
-
-    # Reconstruct 2D image with Inverse Radon Transform
-    recon_img = iradon(reconstructed_sinogram, theta=theta, filter_name='ramp', circle=True)
-    print('...2D image reconstructed')
-
-    # Save artifacts
-    np.save(results_dir / 'initial_2d_map.npy', init_map)
-    np.save(results_dir / 'reconstructed_sinogram.npy', reconstructed_sinogram)
-    np.save(results_dir / 'reconstructed_image.npy', recon_img)
-    print(f'Key arrays saved as .npy at {results_dir}')
-
-    # Normalize & save reconstructed image as .png
-    recon_img_norm = (recon_img - np.min(recon_img)) / (np.max(recon_img) - np.min(recon_img))
-    imsave(results_dir / 'reconstructed_image.png', (recon_img_norm * 255).astype(np.uint8))
-    print(f'Reconstructed image saved as .png at {results_dir}\n')
-
-    # Figure 1. Plot Random Projection
-    print('Generating Figure 1. Detailed analysis for a single random projection...')
-    rand_index = random.randint(0, n_proj - 1)
-    rand_angle = 90.0
-    print(f'...Selected random angle for Figure 1: {rand_angle:.1f}°')
-    with open(f'{results_dir}/simulation_log.txt', 'a') as log:
-        log.write('\n')
-        log.write(f'Random Angle for Figure 1: {rand_angle:.1f}°\n')
-    log.close()
-
-    # 1D projection for random angle, normalize and scale
-    rand_proj = radon(init_map, theta=[rand_angle], circle=True).flatten()
-    if np.max(rand_proj) > 0:
-        rand_proj /= np.max(rand_proj)
-    init_pop_inv_rand = d0_total * rand_proj
-    print('...1D projection for random angle prepared')
-
     single_run_results = simulate_raser_dynamics(
         initial_population_inversion=init_pop_inv_rand,
         T1=T1,
@@ -384,9 +313,6 @@ if __name__ == '__main__':
         sim_duration=2.0,
         points_per_sec=2000
     )
-    print(f'--- RASER Dynamics Simulated for angle: {rand_angle:.1f}deg ---')
-    plot_results(single_run_results, results_dir / 'Figure1_Single_Projection_Analysis.png')
-    print(f'Figure 1 saved to {results_dir}/Figure1_Single_Projection_Analysis.png\n')
 
     # Figure 2. Original vs. Reconstructed Image
     # print("Generating Figure 2. Original vs. Reconstructed Image...")
