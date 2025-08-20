@@ -216,15 +216,15 @@ if __name__ == '__main__':
     mu_0 = 4 * np.pi * 1e-7
     h_bar = 1.05457e-34
     gamma_h = 2.67522e8
-    T1 = 5.0 * 10
-    T2 = 0.7 * 10
-    q_factor = 2000
+    T1 = 5.0
+    T2 = 0.7
+    q_factor = 100
     v_s = 0.5 * (1e-2)**3
     n_modes = 50
     delta_nu = 0.2
     Delta = 10.0
     nu_0 = 50.0
-    d0_total = 25e16
+    d0_total = 25e14
     cplng_beta_calc = (mu_0 * h_bar * gamma_h**2 * q_factor) / (4 * v_s)
     print(f'Calculated Coupling Constant beta: {cplng_beta_calc:.4e}\n')
 
@@ -307,7 +307,7 @@ if __name__ == '__main__':
             center_freq_hz=nu_0,
             gain_bandwidth_hz=Delta,
             mode_spacing_hz=delta_nu,
-            sim_duration=10.0,
+            sim_duration=2.0,
             points_per_sec=2000
         )
         print(f'RASER simulation complete for current angle')
@@ -381,7 +381,7 @@ if __name__ == '__main__':
         center_freq_hz=nu_0,
         gain_bandwidth_hz=Delta,
         mode_spacing_hz=delta_nu,
-        sim_duration=10.0,
+        sim_duration=2.0,
         points_per_sec=2000
     )
     print(f'--- RASER Dynamics Simulated for angle: {rand_angle:.1f}deg ---')
