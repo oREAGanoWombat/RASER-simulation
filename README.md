@@ -1,5 +1,5 @@
-# DL-RASER
-**Correcting RASER MRI artifacts with Deep Learning** \
+# RASER Simulation
+**Simulating RASER dynamics with Python** \
 **Reference**: [10.1126/sciadv.abp8483](https://www.science.org/doi/10.1126/sciadv.abp8483) * supplementary materials heavily referenced
 
 <hr>  
