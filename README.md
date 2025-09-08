@@ -15,6 +15,8 @@
 
 `requirements.txt` - required packages to run any of the above files, see below for instructions on installing
 
+`2-mode-raser` directory - simulation of 2-mode system, developed by Chris Nelson and Seth Dilday
+
 ## Requirements
 If you'd like to batch install the packages in the `requirements.txt` file, do the following: \
 *If using Conda*, run the following in your command line: \
