@@ -7,18 +7,18 @@ from matplotlib.widgets import RectangleSelector
 # --- System Parameters ---
 # These parameters are now defined in the main scope so they can be
 # accessed by both the 'system' function and the initial conditions.
-Gamma = 15   # Pumping rate
-d1_0 = 6.8e21   # Starting value for d1
-d2_0 = 6.8e21   # Starting  value for d2
+Gamma = 1   # Pumping rate
+d1_0 = 5e23   # Starting value for d1
+d2_0 = 5e23   # Starting  value for d2
 
 # Define the system of 6 coupled ODEs with named variables
 def system(t, y):
     d1, d2, a1, a2, phi1, phi2 = y
 
-    T1 = 10.0
-    T2 = 1.5
+    T1 = 25.0
+    T2 = 10
     coupling_beta = 1.0e-22
-    deltaNu = 7.1 # Distance (in Hz) between peaks
+    deltaNu = 2 # Distance (in Hz) between peaks
     nu0 = 1e6
     epsilon = 1e-20
 
@@ -29,15 +29,15 @@ def system(t, y):
     da1_dt = -(a1 / T2) + coupling_beta * d1 * (a1 + a2 * np.cos(phi1 - phi2))
     da2_dt = -(a2 / T2) + coupling_beta * d2 * (a2 + a1 * np.cos(phi1 - phi2))
 
-    dphi1_dt = 2 * np.pi * (nu0 + (deltaNu / 2)) + coupling_beta * (d1 / max(a1,epsilon)) * a2 * np.sin(phi2 - phi1)
-    dphi2_dt = 2 * np.pi * (nu0 - (deltaNu / 2)) + coupling_beta * (d2 / max(a2,epsilon)) * a1 * np.sin(phi2 - phi1)
+    dphi1_dt = 2 * np.pi * (nu0 + 15 + (deltaNu / 2)) + coupling_beta * (d1 / max(a1,epsilon)) * a2 * np.sin(phi2 - phi1)
+    dphi2_dt = 2 * np.pi * (nu0 + 15 - (deltaNu / 2)) + coupling_beta * (d2 / max(a2,epsilon)) * a1 * np.sin(phi2 - phi1)
 
     return [dd1_dt, dd2_dt, da1_dt, da2_dt, dphi1_dt, dphi2_dt]
 
 # Time span and initial conditions
-t_span = (0, 32)
+t_span = (0, 100)
 t_eval = np.linspace(*t_span, 5000)
-initial_conditions = [d1_0, d2_0, 1e-7, 1e-7, np.pi/2, np.pi/3]  # [d1, d2, a1, a2, phi1, phi2]
+initial_conditions = [d1_0, d2_0, 1e10, 1e10, np.pi/2, np.pi/3]  # [d1, d2, a1, a2, phi1, phi2]
 
 print("Starting ODE Solver...")
 start = time.perf_counter()
@@ -123,6 +123,7 @@ ax[1].set_xlabel('Frequency (Hz)')
 ax[1].set_ylabel('Magnitude')
 ax[1].grid(True)
 ax[1].legend()
+ax[1].set_xlim(0, 30) # 👈 Add this line to manually control the x-axis limits
 
 # Create the RectangleSelector widget and connect it to the time domain plot
 rect_selector = RectangleSelector(ax[0], on_select,
