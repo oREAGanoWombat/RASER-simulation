@@ -122,14 +122,16 @@ def simulate_raser_dynamics(
 
 # === PLOT RESULTS ===
 # creates a 2x2 grid of plots that describe one slice/mode in the simulation
-def plot_results(results, png_path):
+def plot_results(results, png_path, run_notes=""):
     time = results['time']
     N = results['n_modes']
     signal = results['output_signal']
     mode_indices = np.arange(1, N + 1) if N > 0 else [] # mu index for plotting
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 11)) # creates a figure with a 2x2 grid for 4 plots
-    fig.suptitle("Multimode RASER Simulation (Single Projection)", fontsize=16)
+    fig.suptitle(run_notes, fontsize=10, fontstyle='italic', wrap=True)
+    fig.text(0.5, 0.94, "Multimode RASER Simulation (Single Projection)",
+             ha='center', va='top', fontsize=16)
 
     # Subplot 1. Population Inversion Profiles (top-left)
     ax1 = axes[0, 0] # select top-left subplot
@@ -176,7 +178,7 @@ def plot_results(results, png_path):
     ax4.grid(True)
 
     # Finalize and save figure
-    fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+    fig.tight_layout(rect=[0, 0.03, 1, 0.90])
     plt.savefig(png_path)
     plt.show()
     print(f"Saved results as PNG to {png_path}")
@@ -184,9 +186,12 @@ def plot_results(results, png_path):
 
 # === PLOT RECONSTRUCTION COMPARISON ===
 # creates image of original image and reconstructed image side-by-side
-def plot_reconstruction_comparison(original_image, reconstructed_image, path):
+def plot_reconstruction_comparison(original_image, reconstructed_image, path, run_notes=""):
     fig, axes = plt.subplots(1, 2, figsize=(10, 5)) # create figure and 1x2 grid of axes objects
-    fig.suptitle("Image Reconstruction Comparison", fontsize=16)
+
+    fig.suptitle(run_notes, fontsize=10, fontstyle="italic", wrap=True)
+    fig.text(0.5, 0.90, "Image Reconstruction Comparison",
+             ha='center', va='top', fontsize=16)
 
     # Subplot 1. Original Image (left)
     orig = axes[0]
@@ -201,7 +206,7 @@ def plot_reconstruction_comparison(original_image, reconstructed_image, path):
     recon.set_axis_off()
 
     # Finalizing and Saving
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.tight_layout(rect=[0, 0.03, 1, 0.85])
     plt.savefig(path)
     plt.show()
     print(f"Saved reconstruction comparison to {path}")
@@ -216,17 +221,30 @@ if __name__ == '__main__':
     mu_0 = 4 * np.pi * 1e-7
     h_bar = 1.05457e-34
     gamma_h = 2.67522e8
-    T1 = 5.0
-    T2 = 0.7
-    q_factor = 100
+    T1 = 5.0 * 10
+    T2 = 0.7 * 10
+    q_factor = 2000
     v_s = 0.5 * (1e-2)**3
-    n_modes = 50
+    n_modes = 48
     delta_nu = 0.2
     Delta = 10.0
     nu_0 = 50.0
-    d0_total = 25e14
+    d0_total = 25e16
+    sim_duration = 1.0
     cplng_beta_calc = (mu_0 * h_bar * gamma_h**2 * q_factor) / (4 * v_s)
     print(f'Calculated Coupling Constant beta: {cplng_beta_calc:.4e}\n')
+    # reconstruction parameters
+    n_proj = 64
+    min_freq_hz = 35
+    max_freq_hz = 65
+
+    # --- Run Notes Parameter ---
+    run_notes = (
+        f"Sim: {datetime.now().strftime('%Y-%m%d_%H%M%S')} | "
+        f"$T_1$={T1}s, $T_2$={T2}s, Q={q_factor}, $\\Delta$={Delta}Hz, $\\delta \\nu$={delta_nu}Hz, $N_{{modes}}$={n_modes} | "
+        f"Recon: {n_proj} Proj., {min_freq_hz}-{max_freq_hz}Hz, {sim_duration} s."
+    )
+    print(f'Run Notes: {run_notes}\n')
 
     # Setup Output Directory
     output_directory_root = Path('./Sim_RASER_Output/') # root folder for outputs, using local directory
@@ -238,6 +256,7 @@ if __name__ == '__main__':
     # create log file with important information
     with open(f'{results_dir}/simulation_log.txt', 'w') as log:
         log.write(f'~~~~~~ SIMULATION LOG FOR {results_dir} ~~~~~~\n')
+        log.write(f'Run Notes: {run_notes}\n')
         log.write('\n')
         log.write('--- Physical Constants and Experimental Parameters ---\n')
         log.write(f'mu_0: {mu_0}\n')
@@ -258,9 +277,6 @@ if __name__ == '__main__':
     log.close()
 
     # --- Reconstruction Parameters ---
-    n_proj = 60
-    min_freq_hz = 35
-    max_freq_hz = 65
     print('Reconstruction Parameters Set')
     print(f'Number of Projections: {n_proj}')
     print(f'Frequency Range: {min_freq_hz}-{max_freq_hz}')
@@ -307,7 +323,7 @@ if __name__ == '__main__':
             center_freq_hz=nu_0,
             gain_bandwidth_hz=Delta,
             mode_spacing_hz=delta_nu,
-            sim_duration=2.0,
+            sim_duration=sim_duration,
             points_per_sec=2000
         )
         print(f'RASER simulation complete for current angle')
@@ -381,16 +397,16 @@ if __name__ == '__main__':
         center_freq_hz=nu_0,
         gain_bandwidth_hz=Delta,
         mode_spacing_hz=delta_nu,
-        sim_duration=2.0,
+        sim_duration=sim_duration,
         points_per_sec=2000
     )
     print(f'--- RASER Dynamics Simulated for angle: {rand_angle:.1f}deg ---')
-    plot_results(single_run_results, results_dir / 'Figure1_Single_Projection_Analysis.png')
+    plot_results(single_run_results, results_dir / 'Figure1_Single_Projection_Analysis.png', run_notes)
     print(f'Figure 1 saved to {results_dir}/Figure1_Single_Projection_Analysis.png\n')
 
     # Figure 2. Original vs. Reconstructed Image
     print("Generating Figure 2. Original vs. Reconstructed Image...")
-    plot_reconstruction_comparison(init_map, recon_img, results_dir / 'Figure2_Reconstruction_Comparison.png')
+    plot_reconstruction_comparison(init_map, recon_img, results_dir / 'Figure2_Reconstruction_Comparison.png', run_notes)
     print(f'Figure 2 saved to {results_dir}/Figure2_Reconstruction_Comparison.png\n')
 
     print('--- SIMULATION COMPLETE ---')
