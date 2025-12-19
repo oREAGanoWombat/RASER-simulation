@@ -1,0 +1,11 @@
+gamma: 0.1
+d1_0: 1e17
+d2_0: 1e17
+
+T1: 15.0
+T2: 0.8
+coupling_beta: 6.4e-17
+deltaNu: 7.1
+nu0: 50
+epsilon: 1e-20
+f_off: 15
