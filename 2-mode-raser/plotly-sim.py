@@ -15,8 +15,8 @@ params = load_config('config.yml')
 
 # --- System Parameters ---
 Gamma = float(params['gamma'])  # Pumping rate
-d1_0 = float(params['d1_0'])   # Starting value for d1
-d2_0 = float(params['d2_0'])    # Starting  value for d2
+init_d1 = float(params['init_d1'])   # Starting value for d1
+init_d2 = float(params['init_d2'])    # Starting  value for d2
 
 # Define the system of 6 coupled ODEs with named variables
 def system(t, y):
@@ -24,6 +24,8 @@ def system(t, y):
 
     T1 = float(params['T1'])
     T2 = float(params['T2'])
+    d1_0 = float(params['d1_0'])
+    d2_0 = float(params['d2_0'])
     coupling_beta = float(params['coupling_beta'])
     deltaNu = float(params['deltaNu'])  # Distance (in Hz) between peaks
     nu0 = float(params['nu0'])
@@ -31,14 +33,15 @@ def system(t, y):
     f_off = float(params['f_off'])  # frequency offset to move both signals positive
 
     # The dd1_dt and dd2_dt equations have been updated to include a pumping term.
-    dd1_dt = Gamma * (d1_0 - d1) - (d1 / T1) - 4 * coupling_beta * (a1**2 + a1 * a2 * np.cos(phi1 - phi2))
-    dd2_dt = Gamma * (d2_0 - d2) - (d2 / T1) - 4 * coupling_beta * (a2**2 + a2 * a1 * np.cos(phi1 - phi2))
+    dd1_dt = Gamma * (d1_0 - d1) - (d1 / T1) - (4 * coupling_beta) * (a1**2 + a1 * a2 * np.cos(phi2 - phi1))
+    dd2_dt = Gamma * (d2_0 - d2) - (d2 / T1) - (4 * coupling_beta) * (a2**2 + a2 * a1 * np.cos(phi2 - phi1))
 
-    da1_dt = -(a1 / T2) + coupling_beta * d1 * (a1 + a2 * np.cos(phi1 - phi2))
-    da2_dt = -(a2 / T2) + coupling_beta * d2 * (a2 + a1 * np.cos(phi1 - phi2))
+    da1_dt = -(a1 / T2) + coupling_beta * d1 * (a1 + a2 * np.cos(phi2 - phi1))
+    da2_dt = -(a2 / T2) + coupling_beta * d2 * (a2 + a1 * np.cos(phi2 - phi1))
 
     dphi1_dt = 2 * np.pi * (nu0 + f_off + (deltaNu / 2)) + coupling_beta * (d1 / max(a1,epsilon)) * a2 * np.sin(phi2 - phi1)
-    dphi2_dt = 2 * np.pi * (nu0 + f_off - (deltaNu / 2)) + coupling_beta * (d2 / max(a2,epsilon)) * a1 * np.sin(phi2 - phi1)
+    dphi2_dt = 2 * np.pi * (nu0 + f_off - (deltaNu / 2)) + coupling_beta * (d2 / max(a2,epsilon)) * a1 * np.sin(phi1 - phi2)
+    #dphi2_dt = 2 * np.pi * (nu0 + f_off - (deltaNu / 2)) + coupling_beta * (d2 / max(a2,epsilon)) * a1 * np.sin(phi2 - phi1)
 
     return [dd1_dt, dd2_dt, da1_dt, da2_dt, dphi1_dt, dphi2_dt]
 
@@ -46,7 +49,7 @@ def system(t, y):
 t_f = 30
 t_span = (0, t_f)
 t_eval = np.linspace(*t_span, 200*t_f)
-initial_conditions = [d1_0, d2_0, 1e10, 1e10, np.pi/2, np.pi/3]  # [d1, d2, a1, a2, phi1, phi2]
+initial_conditions = [init_d1, init_d2, 1e10, 1e10, np.pi/2, np.pi/3]  # [d1, d2, a1, a2, phi1, phi2]
 
 print("Starting ODE Solver...")
 start = time.perf_counter()
