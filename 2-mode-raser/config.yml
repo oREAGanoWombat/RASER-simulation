@@ -1,5 +1,7 @@
 gamma: 0.1
+init_d1: 1e17
 d1_0: 1e17
+init_d2: 1e17
 d2_0: 1e17
 
 T1: 15.0
