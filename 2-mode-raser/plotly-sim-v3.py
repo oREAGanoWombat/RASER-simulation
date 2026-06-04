@@ -46,8 +46,9 @@ def system(t, y):
     return [dd1_dt, dd2_dt, da1_dt, da2_dt, dphi1_dt, dphi2_dt]
 
 
-t_span = (0, 60)
-t_eval = np.linspace(*t_span, 200 * 60)
+t_f = 60
+t_span = (0, t_f)
+t_eval = np.linspace(*t_span, 200 * t_f)
 initial_conditions = [init_d1, init_d2, 1e10, 1e10, np.pi / 2, np.pi / 3]
 
 print("Starting ODE Solver...")
