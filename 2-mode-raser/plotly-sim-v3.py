@@ -23,6 +23,7 @@ init_d2 = float(params['init_d2'])
 a1 = float(params['a1'])
 a2 = float(params['a2'])
 t_f = params['t_f']
+steps = params['steps']
 
 def system(t, y):
     d1, d2, a1, a2, phi1, phi2 = y
@@ -56,12 +57,9 @@ print("Starting ODE Solver...")
 solution = solve_ivp(system, t_span, initial_conditions, t_eval=t_eval, method='BDF')
 print("ODE Solver done")
 
-t = np.float32(solution.t)
-a1 = np.float32(solution.y[2])
-a2 = np.float32(solution.y[3])
-phi1 = np.float32(solution.y[4])
-phi2 = np.float32(solution.y[5])
-output_signal = np.float32((1 / np.sqrt(2)) * (a1 * np.real(np.exp(1j * phi1)) + a2 * np.real(np.exp(1j * phi2))))
+t = solution.t
+a1, a2, phi1, phi2 = solution.y[2], solution.y[3], solution.y[4], solution.y[5]
+output_signal = (1 / np.sqrt(2)) * (a1 * np.real(np.exp(1j * phi1)) + a2 * np.real(np.exp(1j * phi2)))
 
 freq_full = np.float32(np.fft.rfftfreq(len(t), d=(t[1] - t[0])))
 Y_full = np.float32(np.abs(np.fft.rfft(output_signal)))
@@ -214,7 +212,7 @@ def update_plots(relayoutData, clear_clicks, layout_mode, measuring_tool, select
     # Inside your update_plots function:
 
     # Slice the arrays to take every 10th point (adjust this number based on your t_f)
-    step = 10
+    step = steps
 
     # Switch go.Scatter to go.Scattergl
     fig_time = go.Figure(go.Scattergl(

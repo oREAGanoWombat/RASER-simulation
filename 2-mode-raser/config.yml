@@ -1,6 +1,6 @@
 gamma: 0.1
-init_d1: 0.5e17
-d1_0: 2e17
+init_d1: 1e17
+d1_0: 4e17
 init_d2: 1e17
 d2_0: 4e17
 a1: 1e10
@@ -15,3 +15,4 @@ epsilon: 1e-20
 f_off: 15
 
 t_f: 30
+steps: 2
