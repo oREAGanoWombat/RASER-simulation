@@ -56,8 +56,11 @@ print("Starting ODE Solver...")
 solution = solve_ivp(system, t_span, initial_conditions, t_eval=t_eval, method='BDF')
 print("ODE Solver done")
 
-t = solution.t
-a1, a2, phi1, phi2 = solution.y[2], solution.y[3], solution.y[4], solution.y[5]
+t = np.float32(solution.t)
+a1 = np.float32(solution.y[2])
+a2 = np.float32(solution.y[3])
+phi1 = np.float32(solution.y[4])
+phi2 = np.float32(solution.y[5])
 output_signal = (1 / np.sqrt(2)) * (a1 * np.real(np.exp(1j * phi1)) + a2 * np.real(np.exp(1j * phi2)))
 
 freq_full = np.fft.rfftfreq(len(t), d=(t[1] - t[0]))
