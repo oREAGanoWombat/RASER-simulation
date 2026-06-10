@@ -297,6 +297,5 @@ def update_plots(relayoutData, clear_clicks, layout_mode, measuring_tool, select
 
     return fig_time, fig_freq, selections
 
-
 if __name__ == '__main__':
     app.run(debug=True)
