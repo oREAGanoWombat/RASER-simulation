@@ -61,10 +61,10 @@ a1 = np.float32(solution.y[2])
 a2 = np.float32(solution.y[3])
 phi1 = np.float32(solution.y[4])
 phi2 = np.float32(solution.y[5])
-output_signal = (1 / np.sqrt(2)) * (a1 * np.real(np.exp(1j * phi1)) + a2 * np.real(np.exp(1j * phi2)))
+output_signal = np.float32((1 / np.sqrt(2)) * (a1 * np.real(np.exp(1j * phi1)) + a2 * np.real(np.exp(1j * phi2))))
 
-freq_full = np.fft.rfftfreq(len(t), d=(t[1] - t[0]))
-Y_full = np.abs(np.fft.rfft(output_signal))
+freq_full = np.float32(np.fft.rfftfreq(len(t), d=(t[1] - t[0])))
+Y_full = np.float32(np.abs(np.fft.rfft(output_signal)))
 pos_mask = freq_full > 0
 
 # --- Dash App Setup ---
