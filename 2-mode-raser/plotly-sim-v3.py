@@ -207,7 +207,18 @@ def update_plots(relayoutData, clear_clicks, layout_mode, measuring_tool, select
     freq_height = 550 if layout_mode == 'side-by-side' else 700
 
     # --- Time Plot ---
-    fig_time = go.Figure(go.Scatter(x=t, y=output_signal, name="Signal", line=dict(color='royalblue')))
+    # Inside your update_plots function:
+
+    # Slice the arrays to take every 10th point (adjust this number based on your t_f)
+    step = 10
+
+    # Switch go.Scatter to go.Scattergl
+    fig_time = go.Figure(go.Scattergl(
+        x=t[::step],
+        y=output_signal[::step],
+        name="Signal",
+        line=dict(color='royalblue')
+    ))
     for i, sel in enumerate(selections):
         fig_time.add_vrect(x0=sel[0], x1=sel[1], fillcolor=colors[i % len(colors)], opacity=0.2, layer="below",
                            line_width=0)
