@@ -187,7 +187,7 @@ def update_layout_orientation(orientation):
      Input('layout-toggle', 'value'), Input('measuring-tool-toggle', 'value')],  # <-- Added tool input
     [State('selections-store', 'data')]
 )
-def update_plots(relayoutData, clear_clicks, run_notes, layout_mode, measuring_tool, selections):
+def update_plots(relayoutData, clear_clicks, layout_mode, measuring_tool, selections):
     ctx = callback_context
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 
