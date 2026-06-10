@@ -68,6 +68,7 @@ Y_full = np.float32(np.abs(np.fft.rfft(output_signal)))
 pos_mask = freq_full > 0
 
 # --- Dash App Setup ---
+del solution # delete solution before starting app to free up memory
 app = Dash(__name__)
 
 app.layout = html.Div([
