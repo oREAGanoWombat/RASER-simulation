@@ -183,7 +183,7 @@ def update_layout_orientation(orientation):
 
 @app.callback(
     [Output('time-plot', 'figure'), Output('freq-plot', 'figure'), Output('selections-store', 'data')],
-    [Input('time-plot', 'relayoutData'), Input('clear-btn', 'n_clicks'), Input('run-notes', 'value'),
+    [Input('time-plot', 'relayoutData'), Input('clear-btn', 'n_clicks'),
      Input('layout-toggle', 'value'), Input('measuring-tool-toggle', 'value')],  # <-- Added tool input
     [State('selections-store', 'data')]
 )
